@@ -42,7 +42,6 @@ void execute_command(char *cmd)
 int main(void)
 {
 	char cmd[128];
-	int status;
 
 	while (1)
 	{
