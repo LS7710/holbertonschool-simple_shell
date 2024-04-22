@@ -19,7 +19,7 @@ void execute_command(char *cmd)
 	{
 		if (execlp(cmd, cmd, NULL) == -1)
 		{
-			perror("execlp");
+			perror("execvp");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -45,7 +45,8 @@ int main(void)
 
 	while (1)
 	{
-		printf("$ ");
+		if (isatty (STDIN_FILENO))
+			printf("$ ");
 
 		if (fgets(cmd, sizeof(cmd), stdin) == NULL)
 		{
