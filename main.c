@@ -63,6 +63,9 @@ int main(void)
 
 		cmd[strcspn(cmd, "\n")] = '\0';
 
+		if (strlen(cmd) == 0)
+			continue;
+
 		if (strcmp(cmd, "exit") == 0)
 			break;
 
