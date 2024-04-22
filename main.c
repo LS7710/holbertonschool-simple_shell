@@ -1,7 +1,55 @@
 #include "library.h"
 /**
- * execute_command - execute
- * @cmd: variable
+ * remove_nl - for remove \n when not need it
+ *
+ * @cmd: command to execute
+ * Return: cmd
+ */
+char *remove_nl(char *cmd)
+{
+	int x;
+
+	for (x = 0; cmd[x] != '\n'; x++)
+	{
+	}
+	cmd[x] = '\0';
+
+	return (cmd);
+}
+/**
+ * get_cmd - For recive the command
+ *
+ * @cmd: command to execute
+ *
+ * Return: cmd
+ */
+char *get_cmd(char *cmd)
+{
+	int check = 0;
+
+	if (isatty(STDIN_FILENO))/*if interactive use $ */
+	{
+		printf("$ ");
+	}
+	check = getline(&cmd, &len, stdin);/*when use command save on variable cmd*/
+	if (check == -1)/*when error occure*/
+	{
+		if (isatty(STDIN_FILENO))
+		{
+			perrer("getline");
+			free(cmd);
+			return (NULL);
+		}
+		free(cmd);
+		exit(EXIT_SUCCESS);
+	}
+	cmd = remove_nl(cmd);/* see funcion */
+
+	return (cmd);
+}
+/**
+ * execute_command - fix child and parent process
+ * @cmd: command to execute
  *
  * Return: 0
  */
@@ -10,12 +58,12 @@ void execute_command(char *cmd)
 	int status;
 	pid_t pid = fork();
 
-	if (pid == -1)
+	if (pid < 0)
 	{
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
-	else if (pid == 0)
+	else if (pid == 0)/*CHILD PROCESS*/
 	{
 		if (execlp(cmd, cmd, NULL) == -1)
 		{
@@ -23,7 +71,7 @@ void execute_command(char *cmd)
 			exit(EXIT_FAILURE);
 		}
 	}
-	else
+	else/*Parent Process*/
 	{
 		if (waitpid(pid, &status, 0) == -1)
 		{
@@ -41,40 +89,21 @@ void execute_command(char *cmd)
  */
 int main(void)
 {
-	char cmd[128];
+	char *cmd = NULL;
+	size_t len = 0;
 
 	while (1)
 	{
-		if (isatty (STDIN_FILENO))
-			printf("$ ");
-
-		if (fgets(cmd, sizeof(cmd), stdin) == NULL)
-		{
-			if (feof(stdin))
-			{
-				printf("\n");
-				break;
-			}
-			else
-			{
-				perror("fgets");
-				continue;
-			}
-		}
-
-		cmd[strcspn(cmd, "\n")] = '\0';
-
-		if (strlen(cmd) == 0)
-			continue;
+		cmd = get_cmd(cmd);
 
 		if (strcmp(cmd, "exit") == 0)
-			break;
-
+			free(cmd);
+			exit(EXIT_SUCCESS);
 		else
 		{
 			execute_command(cmd);
 		}
+		free(cmd);
 	}
-
 	return (0);
 }
