@@ -19,12 +19,11 @@ char *remove_nl(char *cmd)
 /**
  * get_cmd - For recive the command
  *
- * @cmd: command to execute
- *
  * Return: cmd
  */
-char *get_cmd(char *cmd)
+char *get_cmd(void)
 {
+	char *cmd = NULL;
 	int check = 0;
 	size_t len = 0;
 
@@ -60,29 +59,27 @@ void execute_command(char *cmd)
 	pid_t pid = fork();
 	char *arg[ARR_SIZE];
 	int i = 0;
-	char *cmd_name = NULL;
 
-
-	cmd_name = strtok(cmd, " ");/*use for space and add arguments*/
+	arg[i] = strtok(cmd, " ");/*use for space and add arguments*/
 
 	while (arg[i] != NULL)
 	{
-		arg[i] = strtok(NULL, " ");
 		i++;
+		arg[i] = strtok(NULL, " ");
 	}
-
 	arg[i] = NULL;
-
 	if (pid < 0)
 	{
 		perror("fork");
+		free(cmd);
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0)/*CHILD PROCESS*/
 	{
-		if (execvp(cmd_name, arg) == -1)
+		if (execvp(arg[0], arg) < 0)
 		{
 			perror("execvp");
+			free(cmd);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -91,6 +88,7 @@ void execute_command(char *cmd)
 		if (waitpid(pid, &status, 0) == -1)
 		{
 			perror("waitpid");
+			free(cmd);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -104,23 +102,20 @@ void execute_command(char *cmd)
  */
 int main(void)
 {
-	char *cmd = NULL;
-	char *token;
+	char *cmd;
 
 	while (1)
 	{
-		cmd = get_cmd(cmd);
+		cmd = get_cmd();
 
-		token = strtok(cmd, " ");/*cut the string to the first insta done*/
-
-		if (strcmp(token, "exit") == 0)/*token is same but not space*/
+		if (strcmp(cmd, "exit") == 0)/*compara is exit*/
 		{
 			free(cmd);
 			exit(EXIT_SUCCESS);
 		}
 		else
 		{
-			execute_command(token);
+			execute_command(cmd);
 		}
 		free(cmd);
 	}
