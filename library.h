@@ -9,6 +9,8 @@
 #include <sys/wait.h>
 #include <stdbool.h>
 
+#define ARR_SIZE 258
+
 /**
  * estas librerias es para que algunos commands funcionen
  * las creamos en una libreria para evitar copiar tanto.

@@ -58,6 +58,20 @@ void execute_command(char *cmd)
 {
 	int status;
 	pid_t pid = fork();
+	char *arg[ARR_SIZE];
+	int i = 0;
+	char *cmd_name = NULL;
+
+
+	cmd_name = strtok(cmd, " ");/*use for space and add arguments*/
+
+	while (arg[i] != NULL)
+	{
+		arg[i] = strtok(NULL, " ");
+		i++;
+	}
+
+	arg[i] = NULL;
 
 	if (pid < 0)
 	{
@@ -66,7 +80,7 @@ void execute_command(char *cmd)
 	}
 	else if (pid == 0)/*CHILD PROCESS*/
 	{
-		if (execlp(cmd, cmd, NULL) == -1)
+		if (execvp(cmd_name, arg) == -1)
 		{
 			perror("execvp");
 			exit(EXIT_FAILURE);
@@ -96,9 +110,9 @@ int main(void)
 	while (1)
 	{
 		cmd = get_cmd(cmd);
-		
+
 		token = strtok(cmd, " ");/*cut the string to the first insta done*/
-		
+
 		if (strcmp(token, "exit") == 0)/*token is same but not space*/
 		{
 			free(cmd);
