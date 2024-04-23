@@ -91,19 +91,22 @@ void execute_command(char *cmd)
 int main(void)
 {
 	char *cmd = NULL;
-	
+	char *token;
+
 	while (1)
 	{
 		cmd = get_cmd(cmd);
-
-		if (strcmp(cmd, "exit") == 0)
+		
+		token = strtok(cmd, " ");/*cut the string to the first insta done*/
+		
+		if (strcmp(token, "exit") == 0)/*token is same but not space*/
 		{
 			free(cmd);
 			exit(EXIT_SUCCESS);
 		}
 		else
 		{
-			execute_command(cmd);
+			execute_command(token);
 		}
 		free(cmd);
 	}
