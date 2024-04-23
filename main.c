@@ -26,6 +26,7 @@ char *remove_nl(char *cmd)
 char *get_cmd(char *cmd)
 {
 	int check = 0;
+	size_t len = 0;
 
 	if (isatty(STDIN_FILENO))/*if interactive use $ */
 	{
@@ -36,7 +37,7 @@ char *get_cmd(char *cmd)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			perrer("getline");
+			perror("getline");
 			free(cmd);
 			return (NULL);
 		}
@@ -90,15 +91,16 @@ void execute_command(char *cmd)
 int main(void)
 {
 	char *cmd = NULL;
-	size_t len = 0;
-
+	
 	while (1)
 	{
 		cmd = get_cmd(cmd);
 
 		if (strcmp(cmd, "exit") == 0)
+		{
 			free(cmd);
 			exit(EXIT_SUCCESS);
+		}
 		else
 		{
 			execute_command(cmd);
