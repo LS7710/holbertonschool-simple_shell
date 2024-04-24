@@ -2,24 +2,17 @@
 
 int main(void)
 {
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read;
-	char *prompt = "$ ";
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    char *prompt = "$ ";
+    int last_status = 0;
 
-	do {
-	
-	if (isatty(STDIN_FILENO)) {
-	printf("%s", prompt);
+    while (printf("%s", prompt), (read = getline(&line, &len, stdin)) != -1) {
+        last_status = execute_command(line);
+    }
 
-	}
-
-	read = getline(&line, &len, stdin);
-	if (read != -1) {
-	execute_command(line);
-	}
-	} while (read != -1);
-
-free(line);
-return (EXIT_SUCCESS);
+    free(line);
+    return last_status;
 }
+

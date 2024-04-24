@@ -1,12 +1,10 @@
 #include "shell.h"
-#include <sys/wait.h>
-
-void execute_command(char *cmd)
+int execute_command(char *cmd)
 {
     char *argv[10];
     int i = 0;
     pid_t pid;
-    int status;
+    int status = 0;
 
     argv[i] = strtok(cmd, " \n");
     while (argv[i] != NULL && i < 9) {
@@ -30,10 +28,9 @@ void execute_command(char *cmd)
         } else {
             waitpid(pid, &status, 0);
             if (WIFEXITED(status)) {
-                int exit_status = WEXITSTATUS(status);
-                printf("Command exited with status: %d\n", exit_status);
+                return WEXITSTATUS(status);
             }
         }
     }
+    return 0;
 }
-
