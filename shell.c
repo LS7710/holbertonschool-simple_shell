@@ -7,19 +7,18 @@ void execute_command(char *cmd)
     char *argv[10];
     int i = 0;
     pid_t pid;
-    int j;
 
     argv[i] = strtok(cmd, " \n");
     while (argv[i] != NULL && i < 9) {
         argv[++i] = strtok(NULL, " \n");
     }
 
-
+#ifdef DEBUG_MODE
 
     for (j = 0; j <= i; j++) {
         printf("argv[%d]: %s\n", j, argv[j]);
     }
-
+#endif
 
     if (argv[0] != NULL) {
         if (strcmp(argv[0], "exit") == 0)
