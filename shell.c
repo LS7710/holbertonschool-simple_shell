@@ -19,18 +19,19 @@ int execute_command(char *cmd) {
 
         pid = fork();
         if (pid == 0) {
-            execvp(argv[0], argv);
-            perror("hsh");
-            exit(EXIT_FAILURE);
+            if (execvp(argv[0], argv) == -1) {
+                perror("hsh");
+                exit(EXIT_FAILURE);
+            }
         } else if (pid < 0) {
             perror("hsh");
             return EXIT_FAILURE;
         } else {
             waitpid(pid, &status, 0);
-	    if (WIFEXITED(status)) {
+            if (WIFEXITED(status)) {
                 return WEXITSTATUS(status);
-	    }
+            }
         }
     }
-    return EXIT_SUCCESS;}
-
+    return EXIT_SUCCESS;
+}
