@@ -5,7 +5,7 @@ int main(void)
     char *line = NULL;
     size_t len = 0;
     ssize_t read;
-    char *prompt = "(===||:::::::::::::::> ";
+    char *prompt = "$ ";
 
 
     printf(" _       __     __                             __  \n"
