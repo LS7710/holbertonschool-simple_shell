@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "shell.h"
 
 int main(void)
@@ -8,7 +9,16 @@ int main(void)
     char *prompt = "$ ";
     int last_status = 0;
 
-    while (printf("%s", prompt), (read = getline(&line, &len, stdin)) != -1) {
+    while (1) {
+        if (isatty(STDIN_FILENO)) {
+            printf("%s", prompt);
+        }
+
+        read = getline(&line, &len, stdin);
+        if (read == -1) {
+            break;
+        }
+
         last_status = execute_command(line);
     }
 
