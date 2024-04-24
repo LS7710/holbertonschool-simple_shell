@@ -1,7 +1,5 @@
 #include "shell.h"
 
-
-
 void execute_command(char *cmd)
 {
     char *argv[10];
@@ -13,23 +11,18 @@ void execute_command(char *cmd)
         argv[++i] = strtok(NULL, " \n");
     }
 
-#ifdef DEBUG_MODE
-
-    for (j = 0; j <= i; j++) {
-        printf("argv[%d]: %s\n", j, argv[j]);
-    }
-#endif
-
     if (argv[0] != NULL) {
-        if (strcmp(argv[0], "exit") == 0)
-                exit(0);
+        if (strcmp(argv[0], "exit") == 0) {
+            free(cmd);
+            exit(0);
+        }
 
         pid = fork();
         if (pid == 0) {
             if (execvp(argv[0], argv) == -1) {
                 perror("hsh");
+                exit(EXIT_FAILURE);
             }
-            exit(EXIT_FAILURE);
         } else if (pid < 0) {
             perror("hsh");
         } else {
