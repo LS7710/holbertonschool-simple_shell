@@ -1,6 +1,6 @@
 #include "shell.h"
-int execute_command(char *cmd)
-{
+
+int execute_command(char *cmd) {
     char *argv[10];
     int i = 0;
     pid_t pid;
@@ -19,18 +19,18 @@ int execute_command(char *cmd)
 
         pid = fork();
         if (pid == 0) {
-            if (execvp(argv[0], argv) == -1) {
-                perror("hsh");
-                exit(EXIT_FAILURE);
-            }
+            execvp(argv[0], argv);
+            perror("hsh");
+            exit(EXIT_FAILURE);
         } else if (pid < 0) {
             perror("hsh");
+            return EXIT_FAILURE;
         } else {
             waitpid(pid, &status, 0);
-            if (WIFEXITED(status)) {
+	    if (WIFEXITED(status)) {
                 return WEXITSTATUS(status);
-            }
+	    }
         }
     }
-    return 0;
-}
+    return EXIT_SUCCESS;}
+
