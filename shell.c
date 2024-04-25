@@ -6,7 +6,6 @@ int execute_command(char *cmd) {
     pid_t pid;
     int status;
 
-
     argv[i] = strtok(cmd, " \t");
     while (argv[i] != NULL && i < 9) {
         argv[++i] = strtok(NULL, " \t");
@@ -17,14 +16,18 @@ int execute_command(char *cmd) {
         pid = fork();
         if (pid == 0) {
             execvp(argv[0], argv);
-            fprintf(stderr, "Failed to execute '%s'\n", argv[0]);
-            exit(EXIT_FAILURE);
-        } else if (pid < 0) {
+
+            fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
+            exit(127);
+	} else if (pid < 0) {
             perror("fork failed");
+            return EXIT_FAILURE;
         } else {
-            waitpid(pid, &status, 0);
+    		waitpid(pid, &status, 0);
+    		if (WIFEXITED(status)) {
+                return WEXITSTATUS(status);
+    		}
         }
     }
-    return WEXITSTATUS(status);
+    return EXIT_SUCCESS;
 }
-
