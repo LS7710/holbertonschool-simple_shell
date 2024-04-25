@@ -1,0 +1,54 @@
+execute_command(3) - Execute a shell command
+
+NAME
+    execute_command - execute a shell command
+
+SYNOPSIS
+    #include "shell.h"
+
+    int execute_command(char *cmd);
+
+DESCRIPTION
+    The execute_command function executes a shell command specified by the cmd argument.
+
+RETURN VALUE
+    Upon successful execution of the command, the function returns the exit status of the command.
+    If an error occurs during execution, the function returns EXIT_FAILURE.
+
+ERRORS
+    The function may fail and set errno for the following reasons:
+    
+    EAGAIN - The system lacked the necessary resources to create another process, or the system-imposed limit on the total number of processes under execution system-wide or by the current user ID was exceeded.
+    
+    ENOMEM - Insufficient memory available for the system to allocate resources to execute the command.
+
+EXAMPLES
+    To execute a command in the shell, use the execute_command function as follows:
+    
+    #include "shell.h"
+
+    int main(void) {
+        char *line = NULL;
+        size_t len = 0;
+        ssize_t read;
+        int status = 0;
+
+        while ((read = getline(&line, &len, stdin)) != -1) {
+            status = execute_command(line);
+        }
+
+        free(line);
+        return status;
+    }
+
+SEE ALSO
+    fork(2), execvp(3), waitpid(2), getline(3), free(3)
+
+BUGS
+    There are no known bugs in this implementation.
+
+AUTHOR
+    Created by [Your Name] <your_email@example.com>
+
+COPYRIGHT
+    This software is released under the MIT License

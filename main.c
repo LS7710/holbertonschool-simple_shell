@@ -1,5 +1,4 @@
 #include "library.h"
-#define ARR_SIZE 64
 /**
  * remove_nl - for remove \n when not need it
  *
@@ -62,7 +61,6 @@ void execute_command(char *cmd)
         char *arg[ARR_SIZE];
         int i = 0;
         char *cmd_name = NULL;
-	char *envp[] { NULL }
 
         cmd_name = strtok(cmd, " ");/*use for space and add arguments*/
 
@@ -82,11 +80,16 @@ void execute_command(char *cmd)
         }
         else if (pid == 0)/*CHILD PROCESS*/
         {
-                if (execvp(cmd_name, arg) == -1)
-                {
-                        perror("execvp");
-                        exit(EXIT_FAILURE);
-                }
+		char *envp[] = {
+		"HOME=/home/user",
+		"PATH=/usr/bin:/bin",
+		"LANG=en_US.UTF-8",
+		NULL
+		};
+	
+                execve(arg[0], arg, envp);
+		perror("execvp");
+		exit(EXIT_FAILURE);
         }
         else/*Parent Process*/
         {
