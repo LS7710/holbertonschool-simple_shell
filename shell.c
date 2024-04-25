@@ -2,16 +2,14 @@
 #define MAX_ARGS 124
 
 int execute_command(char *cmd) {
-    char *argv[MAX_ARGS];
+    char *argv[10];
     int argc = 0;
     pid_t pid;
     int status;
-    int i;
-    int j;
 
     char *token = strtok(cmd, " \n\t");
-    while (token != NULL && argc < MAX_ARGS - 1) {
-        argv[argc++] = strdup(token);
+    while (token != NULL && argc < 10 - 1) {
+        argv[argc++] = token;
         token = strtok(NULL, " \n\t");
     }
     argv[argc] = NULL;
@@ -23,21 +21,19 @@ int execute_command(char *cmd) {
     pid = fork();
     if (pid == -1) {
         perror("fork");
-        for (j = 0; j < argc; j++) free(argv[j]);
         return EXIT_FAILURE;
     } else if (pid == 0) {
+
         execvp(argv[0], argv);
-        fprintf(stderr, "Failed to execute '%s'\n", argv[0]);
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
+        exit(127);
     }
 
 
     waitpid(pid, &status, 0);
-    for (i = 0; i < argc; i++) free(argv[i]);
-
     if (WIFEXITED(status)) {
         return WEXITSTATUS(status);
     }
 
-    return 1;
+    return EXIT_SUCCESS;
 }
