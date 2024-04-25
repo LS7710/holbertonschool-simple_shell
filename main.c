@@ -1,18 +1,19 @@
 #include <unistd.h>
 #include "shell.h"
 
-int main(void) 
-{
+int main(void) {
     char *line = NULL;
     size_t len = 0;
     ssize_t read;
     int last_status = 0;
 
     while ((read = getline(&line, &len, stdin)) != -1) {
+
+        line[strcspn(line, "\n")] = 0;
+        
         last_status = execute_command(line);
+    }
 
     free(line);
-    exit(last_status);
-}
-return(0);
+    return last_status;
 }
