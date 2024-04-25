@@ -12,16 +12,11 @@ int execute_command(char *cmd) {
     }
 
     if (argv[0]) {
-        if (strcmp(argv[0], "exit") == 0) {
-            free(cmd);
-            exit(0);
-        }
-
         pid = fork();
         if (pid == 0) {
             if (execvp(argv[0], argv) == -1) {
-                perror("hsh");
-                exit(EXIT_FAILURE);
+                fprintf(stderr, "%s: %s: command not found\n", argv[0], strerror(errno));
+                exit(127);
             }
         } else if (pid < 0) {
             perror("hsh");
