@@ -1,0 +1,53 @@
+.TH MAN_1_SIMPLE_SHELL 1 "April 2024" "Version 1.0" "User Manual"
+
+.SH NAME
+man_1_simple_shell \- simple shell program
+
+.SH SYNOPSIS
+.B man_1_simple_shell
+
+.SH DESCRIPTION
+The
+.B man_1_simple_shell
+program is a simple shell implementation that reads commands from standard input, executes them using the execvp function, and prints the exit status of the executed command.
+
+.SH OPTIONS
+This program does not accept any command-line options.
+
+.SH RETURN VALUE
+The
+.B man_1_simple_shell
+program returns the exit status of the last executed command.
+
+.SH ERRORS
+If an error occurs during command execution or process creation, an appropriate error message is printed to standard error.
+
+.SH EXAMPLES
+To use the
+.B man_1_simple_shell
+program, compile it with the following command:
+.nf
+.B gcc -o man_1_simple_shell man_1_simple_shell.c shell.c
+.fi
+Then, run the program and enter commands to execute:
+.nf
+.B ./man_1_simple_shell
+.fi
+
+.SH SEE ALSO
+.BR execvp (3),
+.BR fork (2),
+.BR waitpid (2),
+.BR perror (3)
+
+.SH AUTHOR
+Written by Steven Rosario, Luis Soto, Jose Mendez.
+
+.SH BUGS
+No known bugs.
+
+.SH COPYRIGHT
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+.SH NOTES
+This program is provided "as is" without warranty of any kind.
