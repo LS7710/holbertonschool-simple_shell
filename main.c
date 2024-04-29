@@ -3,7 +3,7 @@
 
 /**
  * remove_newline - removes new lines
- * @line: the line from stdo
+ * @line: the line from stdin
  *
  * Return: void
  */
